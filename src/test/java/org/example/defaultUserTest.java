@@ -1,18 +1,14 @@
 package org.example;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-
-import java.time.Duration;
-
 @DisplayName("Testes automatizados da Funcionalidade de Sign Up")
 
-public class SingUpTests {
+public class defaultUserTest {
     private WebDriver navegador;
 
     @BeforeEach
@@ -32,7 +28,7 @@ public class SingUpTests {
     }
 
     @Test
-    @DisplayName("Testar os itens")
+    @DisplayName("Testar os itens no default user")
     public void Carrinho(){
         navegador.findElement(By.id("add-to-cart-sauce-labs-onesie")).click();
         navegador.findElement(By.id("add-to-cart-sauce-labs-bike-light")).click();
@@ -47,6 +43,11 @@ public class SingUpTests {
         navegador.findElement(By.id("last-name")).sendKeys("Veronica");
         navegador.findElement(By.id("postal-code")).sendKeys("124567890");
         navegador.findElement(By.id("continue")).click();
+
+        navegador.findElement(By.xpath("//*[@id=\"finish\"]")).click();
+
+        navegador.findElement(By.xpath("//*[@id=\"back-to-products\"]")).click();
+
         // a blusa vermelha não está com o nome correto
         // a mochila está com a descrição errada
         // é possivel finalizar o carrinho sem nada
