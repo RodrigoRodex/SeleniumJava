@@ -1,10 +1,11 @@
-package org.example;
+package org.users.test.standard;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.users.test.ConfigLoader;
 
 @DisplayName("Testes automatizados da Funcionalidade de Sign Up")
 
@@ -18,7 +19,7 @@ public class defaultUserTest {
         navegador.get("https://www.saucedemo.com/inventory.html");
 
         WebElement userNamePath = navegador.findElement(By.xpath("//*[@id=\"user-name\"]"));
-        userNamePath.sendKeys(config.getUsername());
+        userNamePath.sendKeys(config.getUsername("standard"));
 
         WebElement passwordPath = navegador.findElement(By.xpath("//*[@id=\"password\"]"));
         passwordPath.sendKeys(config.getPassword());
@@ -53,5 +54,7 @@ public class defaultUserTest {
         // é possivel finalizar o carrinho sem nada
         
     }
+
+
 
 }

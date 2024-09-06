@@ -1,4 +1,4 @@
-package org.example;
+package org.users.test;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -17,8 +17,8 @@ public class ConfigLoader {
         }
     }
 
-    public String getUsername(){
-        return jsonObject.getString("username");
+    public String getUsername(String user){
+        return jsonObject.getString(user);
     }
 
     public String getPassword(){

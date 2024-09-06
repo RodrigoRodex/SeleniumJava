@@ -1,10 +1,11 @@
-package org.example;
+package org.users.test.locked;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.users.test.ConfigLoader;
 
 public class lockedOutUserTest {
 
@@ -17,7 +18,7 @@ public class lockedOutUserTest {
         navegador.get("https://www.saucedemo.com/inventory.html");
 
         WebElement userNamePath = navegador.findElement(By.xpath("//*[@id=\"user-name\"]"));
-        userNamePath.sendKeys(config.getUsername());
+        userNamePath.sendKeys(config.getUsername("locked"));
 
         WebElement passwordPath = navegador.findElement(By.xpath("//*[@id=\"password\"]"));
         passwordPath.sendKeys(config.getPassword());
