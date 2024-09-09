@@ -4,7 +4,6 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.users.test.ConfigLoader;
 
 @DisplayName("Testes automatizados da Funcionalidade de Sign Up")
@@ -14,9 +13,8 @@ public class defaultUserTest {
 
     @BeforeEach
     public void setup(){
-        navegador = new ChromeDriver();
+        navegador = ConfigLoader.inicializador("https://www.saucedemo.com/inventory.html");
         ConfigLoader config = new ConfigLoader("src/test/resources/credentials");
-        navegador.get("https://www.saucedemo.com/inventory.html");
 
         WebElement userNamePath = navegador.findElement(By.xpath("//*[@id=\"user-name\"]"));
         userNamePath.sendKeys(config.getUsername("standard"));
@@ -30,7 +28,7 @@ public class defaultUserTest {
 
     @Test
     @DisplayName("Testar os itens no default user")
-    public void Carrinho(){
+    public void carrinhoAll(){
         navegador.findElement(By.id("add-to-cart-sauce-labs-onesie")).click();
         navegador.findElement(By.id("add-to-cart-sauce-labs-bike-light")).click();
         navegador.findElement(By.id("add-to-cart-sauce-labs-bolt-t-shirt")).click();
@@ -49,12 +47,7 @@ public class defaultUserTest {
 
         navegador.findElement(By.xpath("//*[@id=\"back-to-products\"]")).click();
 
-        // a blusa vermelha não está com o nome correto
-        // a mochila está com a descrição errada
         // é possivel finalizar o carrinho sem nada
-        
     }
-
-
 
 }

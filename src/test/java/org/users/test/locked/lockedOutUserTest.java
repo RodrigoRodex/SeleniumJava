@@ -4,7 +4,6 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.users.test.ConfigLoader;
 
 public class lockedOutUserTest {
@@ -13,9 +12,8 @@ public class lockedOutUserTest {
 
     @BeforeEach
     public void setup(){
-        navegador = new ChromeDriver();
+        navegador = ConfigLoader.inicializador("https://www.saucedemo.com/inventory.html");
         ConfigLoader config = new ConfigLoader("src/test/resources/credentials");
-        navegador.get("https://www.saucedemo.com/inventory.html");
 
         WebElement userNamePath = navegador.findElement(By.xpath("//*[@id=\"user-name\"]"));
         userNamePath.sendKeys(config.getUsername("locked"));
