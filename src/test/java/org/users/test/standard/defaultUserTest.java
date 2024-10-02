@@ -26,6 +26,11 @@ public class defaultUserTest {
         loginBtn.click();
     }
 
+    @AfterEach
+    public void end(){
+        navegador.close();
+    }
+
     @Test
     @DisplayName("Testar os itens no default user")
     public void carrinhoAll(){
