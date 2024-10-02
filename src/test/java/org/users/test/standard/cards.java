@@ -38,6 +38,11 @@ public class cards {
         loginBtn.click();
     }
 
+    @AfterEach
+    public void end(){
+        navegador.close();
+    }
+
     @Test
     @DisplayName("Testa se os cards estão com nome e texto corretos")
     public void cardName(){

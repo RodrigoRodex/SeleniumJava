@@ -25,6 +25,11 @@ public class lockedOutUserTest {
         loginBtn.click();
     }
 
+    @AfterEach
+    public void end(){
+        navegador.close();
+    }
+
     @Test
     @DisplayName("Testar os itens no locked user")
     public void locked(){

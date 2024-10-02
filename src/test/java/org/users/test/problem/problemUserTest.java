@@ -1,13 +1,12 @@
 package org.users.test.problem;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.opentest4j.AssertionFailedError;
 import org.users.test.ConfigLoader;
 
 public class problemUserTest {
@@ -33,13 +32,23 @@ public class problemUserTest {
 
     }
 
+    @AfterEach
+    public void end(){
+        navegador.close();
+    }
+
     @Test
     @DisplayName("Testa o carrinho")
     public void carrinho(){
             WebElement addBtn = navegador.findElement(By.xpath("//*[@id=\"add-to-cart-sauce-labs-backpack\"]"));
             addBtn.click();
             navegador.findElement(By.xpath("//*[@id=\"remove-sauce-labs-backpack\"]")).click();
-            Assertions.assertFalse(addBtn.isDisplayed());
+            try{
+                navegador.findElement(By.xpath("//*[@id=\"add-to-cart-sauce-labs-backpack\"]"));
+            }catch (NoSuchElementException e){
+                ConfigLoader.addError("Botão para remover não remove");
+            }
+            ConfigLoader.reportErrors();
     }
     // consigo adicionar um item ao carrinho = Adicionar um item ao carrinho e tentar remover
     // mas não consigo tirar, pela pagina dos produtos
@@ -54,6 +63,7 @@ public class problemUserTest {
             String imgAtt = imagens.getAttribute("src");
             String imgEspe = imgsEspe[i];
 
+            assert imgAtt != null;
             if (!imgAtt.equals(imgEspe)){
                 ConfigLoader.addError("Card " + i + " com imagem esperada de: " + imgEspe + " teve a imagem de: " + imgAtt);
             }
@@ -72,7 +82,13 @@ public class problemUserTest {
         select.selectByIndex(1);
 
         WebElement filtroTextNew = navegador.findElement(By.xpath("//*[@id=\"header_container\"]/div[2]/div/span/span"));
-        Assertions.assertNotEquals(filtroTextOld, filtroTextNew);
+
+        try {
+            Assertions.assertNotEquals(filtroTextOld, filtroTextNew);
+        }catch (AssertionFailedError e){
+            ConfigLoader.addError("Filtro não foi alterado quando deveria");
+        }
+        ConfigLoader.reportErrors();
     }
     // o filtro não funciona = Verificar se eles funcionam e comparar
 
@@ -90,15 +106,30 @@ public class problemUserTest {
         WebElement codPostal = navegador.findElement(By.xpath("//*[@id=\"postal-code\"]"));
         codPostal.sendKeys("124567890");
 
-        String priNomeText = priNome.getText();
-        String segNomeText = segNome.getText();
-        String codPostalText = codPostal.getText();
+        String priNomeText = priNome.getAttribute("value");
+        String segNomeText = segNome.getAttribute("value");
+        String codPostalText = codPostal.getAttribute("value");
 
-        Assertions.assertEquals("Maria",priNomeText);
-        Assertions.assertEquals("Serra", segNomeText);
-        Assertions.assertEquals("124567890",codPostalText);
+        try{
+            Assertions.assertEquals("Maria",priNomeText);
+        }catch (AssertionFailedError e){
+            ConfigLoader.addError("First name deveria ser Maria, mas foi \"" + priNomeText +"\"");
+        }
+
+        try{
+            Assertions.assertEquals("Serra", segNomeText);
+        }catch (AssertionFailedError e){
+            ConfigLoader.addError("Last name deveria ser Serra, mas foi \"" + segNomeText +"\"");
+        }
+
+        try{
+            Assertions.assertEquals("124567890",codPostalText);
+        }catch (AssertionFailedError e){
+            ConfigLoader.addError("ZipCode deveria ser 124567890, mas foi \"" + codPostalText+"\"");
+        }
 
         navegador.findElement(By.xpath("//*[@id=\"continue\"]")).click();
+        ConfigLoader.reportErrors();
     }
     // checkout não me deixa digitar o LastName = Digitar e verificar se o valor do primeiro nome muda
 }

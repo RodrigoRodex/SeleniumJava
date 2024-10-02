@@ -1,13 +1,13 @@
 package org.users.test.error;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.opentest4j.AssertionFailedError;
 import org.users.test.ConfigLoader;
+
 
 public class errorUserTest {
     private WebDriver navegador;
@@ -33,10 +33,16 @@ public class errorUserTest {
         loginBtn.click();
     }
 
+    @AfterEach
+    public void end(){
+        navegador.close();
+    }
+
     @Test
     @DisplayName("Sobrenome no cadastro")
     public void lastNameTest(){
         // não da para colocar sobrenome no cadastro de checkout
+
         navegador.findElement(By.xpath("//*[@id=\"shopping_cart_container\"]/a")).click();
         navegador.findElement(By.xpath("//*[@id=\"checkout\"]")).click();
 
@@ -46,10 +52,28 @@ public class errorUserTest {
 
         WebElement lName = navegador.findElement(By.xpath("//*[@id=\"last-name\"]"));
         lName.sendKeys("Serra");
-        Assertions.assertEquals("Serra", lName.getAttribute("value"));
+
+        try{
+            Assertions.assertEquals("Serra", lName.getAttribute("value"));
+        }catch (AssertionFailedError e){
+            ConfigLoader.addError("Elemento Last Name não funciona como deveria");
+        }
+        WebElement ZCode = navegador.findElement(By.xpath("//*[@id=\"postal-code\"]"));
+        ZCode.sendKeys("124567890");
+
+        // não é possivel apertar o botão de finalizar
+        navegador.findElement(By.xpath("//*[@id=\"continue\"]")).click();
+        navegador.findElement(By.xpath("//*[@id=\"finish\"]")).click();
+
+        try{
+            navegador.findElement(By.xpath("//*[@id=\"checkout_complete_container\"]/h2"));
+        }catch (NoSuchElementException e){
+            ConfigLoader.addError("Pagina de chekout completo não foi mostrada");
+        }
+
+        ConfigLoader.reportErrors();
     }
 
-    // não é possivel apertar o botão de finalizar
     @Test
     @DisplayName("Testando quais cards estão com problema")
     public void cardTest(){
@@ -58,10 +82,15 @@ public class errorUserTest {
             String cardAddBtnXPath = String.format("%s", "//*[@id=\"add-to-cart" + s);
             String cardRemBtnXPath = String.format("%s", "//*[@id=\"remove" + s);
 
-            WebElement cardAddButton = navegador.findElement(By.xpath(cardAddBtnXPath));
-            cardAddButton.click();
-            navegador.findElement(By.xpath(cardRemBtnXPath));
+            try{
+                WebElement cardAddButton = navegador.findElement(By.xpath(cardAddBtnXPath));
+                cardAddButton.click();
+                navegador.findElement(By.xpath(cardRemBtnXPath));
+            }catch (NoSuchElementException e){
+                ConfigLoader.addError("Botão do card " + s + " não foi alterado ao clicar e nem contabilizou");
+            }
         }
+        ConfigLoader.reportErrors();
     }
     // filtro também não funciona
 

@@ -1,13 +1,11 @@
 package org.users.test.performance;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.opentest4j.AssertionFailedError;
 import org.users.test.ConfigLoader;
 
 public class performanceUserTest {
@@ -27,6 +25,11 @@ public class performanceUserTest {
 
     }
 
+    @AfterEach
+    public void end(){
+        navegador.close();
+    }
+
     @Test
     @DisplayName("Teste de loading no login")
     public void loadLogin(){
@@ -36,9 +39,12 @@ public class performanceUserTest {
         long enTime = System.currentTimeMillis();
 
         long loadTime = enTime - stTime;
-        System.out.println("Demorou " + loadTime + " ms");
-
-        Assertions.assertTrue(loadTime < 2000, "Excedeu 2000ms");
+        try{
+            Assertions.assertTrue(loadTime < 2000, "Excedeu 2000ms");
+        }catch (AssertionFailedError e){
+            ConfigLoader.addError("Demorou " +loadTime+"s para carregar a página inicial");
+        }
+        ConfigLoader.reportErrors();
     }
 
     @Test
@@ -54,9 +60,13 @@ public class performanceUserTest {
         long enTime = System.currentTimeMillis();
 
         long loadTime = enTime - stTime;
-        System.out.println("Demorou " + loadTime + " ms");
 
-        Assertions.assertTrue(loadTime < 2000, "Excedeu 2000ms");
+        try {
+            Assertions.assertTrue(loadTime < 2000, "Excedeu 2000ms");
+        }catch (AssertionFailedError e){
+            ConfigLoader.addError("Demorou "+loadTime+"s para carregar a mudança do filtro");
+        }
+        ConfigLoader.reportErrors();
     }
 
     @Test
@@ -82,8 +92,12 @@ public class performanceUserTest {
         long enTime = System.currentTimeMillis();
 
         long loadTime = enTime - stTime;
-        System.out.println("Demorou " + loadTime + " ms");
 
-        Assertions.assertTrue(loadTime < 2000, "Excedeu 2000ms");
+        try {
+            Assertions.assertTrue(loadTime < 2000, "Excedeu 2000ms");
+        }catch (AssertionFailedError e){
+            ConfigLoader.addError("Demorou "+ loadTime +"s para finalizar a compra");
+        }
+        ConfigLoader.reportErrors();
     }
 }
