@@ -8,9 +8,17 @@ import org.openqa.selenium.support.ui.Select;
 import org.opentest4j.AssertionFailedError;
 import org.users.test.ConfigLoader;
 
+import java.util.Arrays;
+
 public class visualUserTest {
     private WebDriver navegador;
     private final String[] priceEspe = {"$29.99","$9.99", "$15,99","$49,99","$7,99","$15,99"};
+    private final String[] Card = {"-sauce-labs-backpack\"]",
+            "-sauce-labs-bike-light\"]",
+            "-sauce-labs-bolt-t-shirt\"]",
+            "-sauce-labs-fleece-jacket\"]",
+            "-sauce-labs-onesie\"]",
+            "-test.allthethings()-t-shirt-(red)\"]"};
 
     @BeforeEach
     public void setup(){
@@ -96,9 +104,47 @@ public class visualUserTest {
         }
         ConfigLoader.reportErrors();
     }
-    // lugar do carrinho errado
 
-    // último card com adicionar, no lugar errado
+    @Test
+    @DisplayName("Verificando o lugar dos elementos")
+    public void loc(){
+        int[] carrOld = {852};
+        int[] btnOld = {702};
+        int[] checkbtn = {694};
 
-    // checkout no lugar errado
+        try{
+            WebElement carrNew = navegador.findElement(By.xpath("//*[@id=\"shopping_cart_container\"]/a"));
+            carrNew.getLocation();
+            Assertions.assertEquals(carrOld[0],carrNew);
+        }catch (AssertionFailedError e){
+            ConfigLoader.addError("Localização do carrinho está errada");
+        }
+
+        for (String s : Card){
+            try{
+                String addBtnXPath =  String.format("%s","//*[@id=\"add-to-cart"+s);
+                WebElement addBtn = navegador.findElement(By.xpath(addBtnXPath));
+                int btnX = addBtn.getLocation().getX();
+                Assertions.assertEquals(btnOld[0], btnX);
+            }catch (AssertionFailedError e){
+                ConfigLoader.addError("Botão de index: "+s+" está no lugar errado");
+            }
+        }
+        try {
+            WebElement carrinho = navegador.findElement(By.xpath("//*[@id=\"shopping_cart_container\"]/a"));
+            carrinho.click();
+            WebElement carrinhoXPath = navegador.findElement(By.xpath("//*[@id=\"shopping_cart_container\"]/a"));
+            int carX = carrinhoXPath.getLocation().getX();
+            Assertions.assertEquals(checkbtn[0],carX);
+        }catch (AssertionFailedError e){
+            ConfigLoader.addError("Botão de Checkout no lugar errado");
+        }
+        ConfigLoader.reportErrors();
+
+        // lugar do carrinho errado
+        // último card com adicionar, no lugar errado
+        // checkout no lugar errado
+
+
+    }
 }
